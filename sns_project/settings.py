@@ -141,3 +141,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm',
+}
