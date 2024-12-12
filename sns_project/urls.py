@@ -5,5 +5,6 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', lambda request: redirect('accounts/login/')),
+    path('timeline/', include('timeline.urls')),
+    path('', lambda request: redirect('timeline')),
 ]
