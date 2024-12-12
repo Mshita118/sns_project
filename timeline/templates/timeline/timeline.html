@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>タイムライン</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">投稿</button>
+  </form>
+  <hr>
+  <div>
+    {% for post in posts %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ post.user.username }}</h5>
+        <p class="card-text">{{ post.content }}</p>
+        <p class="card-text"><small class="text-muted">{{ post.created_at|date:"Y-m-d H:i" }}</small></p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
