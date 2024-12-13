@@ -8,9 +8,14 @@ from .forms import PostForm
 #タイムライン
 @login_required
 def timeline(request):
-    followed_users = Follow.objects.filter(
-        follower=request.user).values('followed')
-    posts = Post.objects.filter(user__in=followed_users).order_by('-created_at')
+    posts = Post.objects.all().order_by('-created_at')
+    posts_with_follow_status =[]
+    for post in posts:
+        is_following = post.user.followers.filter(follower=request.user).exists()
+        posts_with_follow_status.append({
+            'post': post,
+            'is_following': is_following,
+        })
     form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST)
