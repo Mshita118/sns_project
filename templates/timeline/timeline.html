@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block content %}
+<form method="get" action="{% url 'search_posts' %}" class="mb-3">
+  <input type="text" name="q" class="form-control" placeholder="投稿やユーザーを検索">
+  <button type="submit" class="btn btn-primary mt-2">検索</button>
+</form>
 <div class="container">
   <h2>タイムライン</h2>
   <form method="post">
