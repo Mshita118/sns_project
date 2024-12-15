@@ -1,0 +1,20 @@
+<h1>{{ post.user.username }}</h1>
+<p>{{ post.content }}</p>
+<hr>
+<h2>コメント</h2>
+<ul>
+  {% for comment in comments %}
+  <li>
+    <strong>{{ comment.user.username }}:</strong>
+    <small>{{ comment.created_at }}</small>
+    <p>{{ comment.content }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<hr>
+<h3>コメントを追加する</h3>
+<form method="post">
+  {% csrf_token %}
+  {{ comment_form.as_p }}
+  <button type="submit">コメントする</button>
+</form>
