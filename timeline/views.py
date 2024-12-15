@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Post
 from .models import Follow
-from .forms import PostForm
+from .models import Comment
+from .forms import PostForm, CommentForm
 
-# タイムライン
 # タイムライン
 
 
@@ -74,4 +74,25 @@ def search_posts(request):
         'query': query,
         'posts': posts,
         'users': users,
+    })
+
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = post.comments.all()
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        form = CommentForm()
+    return render(request, 'timeline/post_detail.html', {
+        'post': post,
+        'comments': comments,
+        'form': form
     })
