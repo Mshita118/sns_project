@@ -6,13 +6,17 @@ from .models import Follow
 from .forms import PostForm
 
 # タイムライン
+# タイムライン
 
 
 @login_required
 def timeline(request):
     posts = Post.objects.all().order_by('-created_at')
     posts_with_follow_status = []
+    posts_with_follow_status = []
     for post in posts:
+        is_following = post.user.followers.filter(
+            follower=request.user).exists()
         is_following = post.user.followers.filter(
             follower=request.user).exists()
         posts_with_follow_status.append({
@@ -33,6 +37,8 @@ def timeline(request):
 
 
 @login_required
+# フォロー機能
+@login_required
 def follow_user(request, user_id):
     followed_user = User.objects.get(id=user_id)
 
@@ -46,6 +52,8 @@ def follow_user(request, user_id):
 def unfollow_user(request, user_id):
     followed_user = User.ubjects.get(id=user_id)
 
+    follow = Follow.objects.filter(
+        follower=request.user, followed=followed_user)
     follow = Follow.objects.filter(
         follower=request.user, followed=followed_user)
     if follow.exists():
@@ -62,7 +70,6 @@ def search_posts(request):
     else:
         posts = []
         users = []
-
     return render(request, 'timeline/search_results.html', {
         'query': query,
         'posts': posts,
