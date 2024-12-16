@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Post
-from .models import Follow
-from .models import Comment
+from .models import Post, Follow, Comment, Like
 from .forms import PostForm, CommentForm
 
 # タイムライン
@@ -96,3 +94,12 @@ def post_detail(request, post_id):
         'comments': comments,
         'form': form
     })
+
+
+#いいね
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        like.delete()
+    return redirect('post_detail', post_id=post.id)
