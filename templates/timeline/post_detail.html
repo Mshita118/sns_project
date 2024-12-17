@@ -18,3 +18,15 @@
   {{ form.as_p }}
   <button type="submit">コメントする</button>
 </form>
+<p>いいね数： {{ post.likes.count }}</p>
+{% if is_liked %}
+<form method="post" action="{% url 'like_post' post.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">いいねを取り消す</button>
+</form>
+{% else %}
+<form method="post" action="{% url 'like_post' post.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">いいね</button>
+</form>
+{% endif %}

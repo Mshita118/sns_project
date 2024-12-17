@@ -11,16 +11,16 @@ from .forms import PostForm, CommentForm
 def timeline(request):
     posts = Post.objects.all().order_by('-created_at')
     posts_with_follow_status = []
-    posts_with_follow_status = []
     for post in posts:
         is_following = post.user.followers.filter(
             follower=request.user).exists()
-        is_following = post.user.followers.filter(
-            follower=request.user).exists()
+        is_liked = post.likes.filter(user=request.user).exists()
         posts_with_follow_status.append({
             'post': post,
             'is_following': is_following,
+            'is_liked': is_liked,
         })
+
     form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -29,7 +29,8 @@ def timeline(request):
             post.user = request.user
             post.save()
             return redirect('timeline')
-    return render(request, 'timeline/timeline.html', {'posts': posts, 'form': form})
+
+    return render(request, 'timeline/timeline.html', {'posts': posts, 'form': form, 'posts_with_follow_status': posts_with_follow_status, })
 
 # フォロー機能
 
@@ -96,7 +97,7 @@ def post_detail(request, post_id):
     })
 
 
-#いいね
+# いいね
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
