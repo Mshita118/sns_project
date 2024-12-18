@@ -1,5 +1,9 @@
 <h1>{{ post.user.username }}</h1>
 <p>{{ post.content }}</p>
+
+{% if post.image %}
+<img src="{{ post.image.url }}" alt="Post Image" class="img-fluid mb-3">
+{% endif %}
 <hr>
 <h2>コメント</h2>
 <ul>
