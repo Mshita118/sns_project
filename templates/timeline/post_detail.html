@@ -34,3 +34,7 @@
   <button type="submit" class="btn btn-primary">いいね</button>
 </form>
 {% endif %}
+{% if post.user == request.user %}
+<a href="{% url 'edit_post' post.id %}" class="btn btn-warning">編集する</a>
+{% endif %}
+<a href="{% url 'timeline' %}" class="btn btn-secondary">タイムラインに戻る</a>

@@ -9,4 +9,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('timeline/', include('timeline.urls')),
     path('', lambda request: redirect('timeline')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

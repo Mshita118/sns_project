@@ -32,11 +32,24 @@ def timeline(request):
 
     return render(request, 'timeline/timeline.html', {'posts': posts, 'form': form, 'posts_with_follow_status': posts_with_follow_status, })
 
-# フォロー機能
+# 投稿編集機能
 
 
 @login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'timeline/edit_post.html', {'form': form, 'post': post})
+
 # フォロー機能
+
+
 @login_required
 def follow_user(request, user_id):
     followed_user = User.objects.get(id=user_id)
