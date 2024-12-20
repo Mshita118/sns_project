@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>投稿を削除</h1>
+<p>本当にこの投稿を削除しますか？</p>
+<p><strong>{{ post.content }}</strong></p>
+{% if post.image %}
+<img src="{{ post.image.url }}" alt="Post Image" class="img-fluid mb-3">
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">削除する</button>
+  <a href="{% url 'post_detail' post.id %}" class="btn btn-secondary">キャンセル</a>
+</form>
+{% endblock %}

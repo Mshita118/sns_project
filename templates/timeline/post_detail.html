@@ -37,4 +37,5 @@
 {% if post.user == request.user %}
 <a href="{% url 'edit_post' post.id %}" class="btn btn-warning">編集する</a>
 {% endif %}
+<a href="{% url 'delete_post' post.id %}" class="btn btn-danger">削除</a>
 <a href="{% url 'timeline' %}" class="btn btn-secondary">タイムラインに戻る</a>

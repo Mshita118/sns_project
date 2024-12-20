@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from .models import Post, Follow, Comment, Like
 from .forms import PostForm, CommentForm
 
@@ -36,6 +37,16 @@ def timeline(request):
 
 
 @login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, "投稿を削除しました。")
+        return redirect('timeline')
+    return render(request, 'timeline/confirm_post.html', {'post': post})
+
+
+@login_required
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
     if request.method == "POST":
@@ -47,9 +58,10 @@ def edit_post(request, post_id):
         form = PostForm(instance=post)
     return render(request, 'timeline/edit_post.html', {'form': form, 'post': post})
 
+# 投稿削除機能
+
+
 # フォロー機能
-
-
 @login_required
 def follow_user(request, user_id):
     followed_user = User.objects.get(id=user_id)
