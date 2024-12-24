@@ -2,8 +2,37 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Post, Follow, Comment, Like
-from .forms import PostForm, CommentForm
+from .models import Post, Follow, Comment, Like, Profile
+from .forms import PostForm, CommentForm, ProfileUpdateForm
+from allauth.account.views import LoginView
+
+
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if not hasattr(self.request.user, 'profile'):
+            Profile.objects.get_or_create(user=self.request.user)
+        return response
+
+
+# プロフィール
+@login_required
+def profile_view(request, username):
+    profile = Profile.objects.get(user__username=username)
+    return render(request, 'timeline/profile.html', {'profile': profile})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', username=request.user.username)
+    else:
+        form = ProfileUpdateForm(instance=request.user.profile)
+    return render(request, 'timeline/edit_profile.html', {'form': form})
 
 # タイムライン
 

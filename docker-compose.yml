@@ -1,7 +1,8 @@
+version: '3'
 services:
   web:
     build: .
-    user: "1000:1000"
+    user: root
     volumes:
       - .:/app
     ports:

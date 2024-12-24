@@ -1,5 +1,11 @@
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, Profile
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'profile_image', 'cover_image', 'location', 'website']
 
 
 class PostForm(forms.ModelForm):
