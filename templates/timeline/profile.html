@@ -7,5 +7,16 @@
 <p>{{ profile.bio }}</p>
 <p>location: {{ profile.location }}</p>
 <p>Website: <a href="{{ profile.website }}">{{ profile.website }}</a></p>
+
+{% if request.user != profile.user %}
+{% if is_following %}
+<a href="{% url 'unfollow_user' profile.user.id %}">Unfollow</a>
+{% else %}
+<a href="{% url 'follow_user' profile.user.id %}">Follow</a>
+{% endif %}
+{% endif %}
+
+<p>Followers: {{ profile.user.followers.count }}</p>
+<p>Following: {{ profile.user.following.count }}</p>
 <a href="{% url 'edit_profile' %}">Edit Profile</a>
 {% endblock %}

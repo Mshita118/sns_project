@@ -21,6 +21,7 @@ def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     profile, created = Profile.objects.get_or_create(user=user)
     print(f"User: {user}, Profile created: {created}")
+    is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
     return render(request, 'timeline/profile.html', {'profile': profile})
 
 
