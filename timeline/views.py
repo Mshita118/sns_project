@@ -18,25 +18,29 @@ class CustomLoginView(LoginView):
 # プロフィール
 @login_required
 def profile_view(request, username):
-    profile = Profile.objects.get(user__username=username)
+    user = get_object_or_404(User, username=username)
+    profile, created = Profile.objects.get_or_create(user=user)
+    print(f"User: {user}, Profile created: {created}")
     return render(request, 'timeline/profile.html', {'profile': profile})
 
 
 @login_required
 def edit_profile(request):
+    print("Accessing edit_profile view")
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    print(f"Profile created: {created}")
+
     if request.method == 'POST':
-        form = ProfileUpdateForm(
-            request.POST, request.FILES, instance=request.user.profile)
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('profile', username=request.user.username)
     else:
-        form = ProfileUpdateForm(instance=request.user.profile)
+        form = ProfileUpdateForm(instance=profile)
     return render(request, 'timeline/edit_profile.html', {'form': form})
 
+
 # タイムライン
-
-
 @login_required
 def timeline(request):
     posts = Post.objects.all().order_by('-created_at')
@@ -95,7 +99,7 @@ def edit_post(request, post_id):
 def follow_user(request, user_id):
     followed_user = User.objects.get(id=user_id)
 
-    if not Follow.objects.filter(followe=request.user, followed=followed_user).exists():
+    if not Follow.objects.filter(follower=request.user, followed=followed_user).exists():
         Follow.objects.create(follower=request.user, followed=followed_user)
 
     return redirect('timeline')

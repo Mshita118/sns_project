@@ -12,7 +12,7 @@ urlpatterns = [
     path('<int:post_id>/', views.post_detail, name='post_detail'),
     path('<int:post_id>/like/', views.like_post, name='like_post'),
     path('post/<int:post_id>/delete/', views.delete_post, name='delete_post'),
-    path('profile/<str:username>/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.profile_view, name='profile'),
     path('accounts/login/', CustomLoginView.as_view(), name='account_login'),
 ]
