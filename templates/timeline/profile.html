@@ -16,7 +16,17 @@
 {% endif %}
 {% endif %}
 
-<p>Followers: {{ profile.user.followers.count }}</p>
-<p>Following: {{ profile.user.following.count }}</p>
+<p>Followers: </p>
+<ul>
+  {% for follower in followers %}
+  <li><a href="{% url 'profile' follower.follower.username %}">{{ follower.follower.username }}</a></li>
+  {% endfor %}
+</ul>
+<p>Following: </p>
+<ul>
+  {% for follow in following %}
+  <li><a href="{% url 'profile' follow.followed.username %}">{{ follow.followed.username }}</a></li>
+  {% endfor %}
+</ul>
 <a href="{% url 'edit_profile' %}">Edit Profile</a>
 {% endblock %}
