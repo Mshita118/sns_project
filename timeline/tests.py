@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import Profile, Post, Comment, Like, Follow
-from .forms import ProfileUpdateForm
+from .forms import ProfileUpdateForm, CommentForm
 # models.pyのテスト
 
 
@@ -168,3 +168,23 @@ class ProfileUpdateFormTest(TestCase):
         updated_profile = form.save()
         self.assertEqual(updated_profile.bio, 'This is a test bio')
         self.assertEqual(updated_profile.location, 'Tokyo')
+
+
+class CommentFormTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass')
+        self.post = Post.objects.create(
+            user=self.user, content='This is a test post')
+
+    def test_valid_comment_form(self):
+        form_data = {
+            'content': 'This is a test comment'
+        }
+        form = CommentForm(data=form_data)
+        self.assertTrue(form.is_valid())
+        comment = form.save(commit=False)
+        comment.post = self.post
+        comment.user = self.user
+        comment.save()
+        self.assertEqual(comment.content, 'This is a test comment')
