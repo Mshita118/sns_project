@@ -1,8 +1,10 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, SimpleTestCase
 from django.contrib.auth.models import User
-from django.urls import reverse
+from django.urls import reverse, resolve
 from .models import Profile, Post, Comment, Like, Follow
 from .forms import ProfileUpdateForm, CommentForm
+from .views import timeline, follow_user, unfollow_user, search_posts, edit_post, post_detail, like_post, delete_post, edit_profile, profile_view
+from accounts.views import CustomLoginView
 # models.pyのテスト
 
 
@@ -188,3 +190,51 @@ class CommentFormTest(TestCase):
         comment.user = self.user
         comment.save()
         self.assertEqual(comment.content, 'This is a test comment')
+
+
+# urls.pyのテスト
+class TestUrls(SimpleTestCase):
+
+    def test_timeline_url(self):
+        url = reverse('timeline')
+        self.assertEquals(resolve(url).func, timeline)
+
+    def test_follow_user_url(self):
+        url = reverse('follow_user', args=[1])
+        self.assertEquals(resolve(url).func, follow_user)
+
+    def test_unfollow_user_url(self):
+        url = reverse('unfollow_user', args=[1])
+        self.assertEquals(resolve(url).func, unfollow_user)
+
+    def test_search_posts_url(self):
+        url = reverse('search_posts')
+        self.assertEquals(resolve(url).func, search_posts)
+
+    def test_edit_post_url(self):
+        url = reverse('edit_post', args=[1])
+        self.assertEquals(resolve(url).func, edit_post)
+
+    def test_post_detail_url(self):
+        url = reverse('post_detail', args=[1])
+        self.assertEquals(resolve(url).func, post_detail)
+
+    def test_like_post_url(self):
+        url = reverse('like_post', args=[1])
+        self.assertEquals(resolve(url).func, like_post)
+
+    def test_delete_post_url(self):
+        url = reverse('delete_post', args=[1])
+        self.assertEquals(resolve(url).func, delete_post)
+
+    def test_edit_profile_url(self):
+        url = reverse('edit_profile')
+        self.assertEquals(resolve(url).func, edit_profile)
+
+    def test_profile_view_url(self):
+        url = reverse('profile', args=['username'])
+        self.assertEquals(resolve(url).func, profile_view)
+
+    def test_account_login_url(self):
+        url = reverse('account_login')
+        self.assertEquals(resolve(url).func.view_class, CustomLoginView)
