@@ -15,18 +15,7 @@
 <a href="{% url 'follow_user' profile.user.id %}">Follow</a>
 {% endif %}
 {% endif %}
-
-<p>Followers: </p>
-<ul>
-  {% for follower in followers %}
-  <li><a href="{% url 'profile' follower.follower.username %}">{{ follower.follower.username }}</a></li>
-  {% endfor %}
-</ul>
-<p>Following: </p>
-<ul>
-  {% for follow in following %}
-  <li><a href="{% url 'profile' follow.followed.username %}">{{ follow.followed.username }}</a></li>
-  {% endfor %}
-</ul>
+<p>フォロワー: <a href="{% url 'follower_list' user.username %}">{{ user.followers.count }}</a></p>
+<p>フォロー中: <a href="{% url 'following_list' user.username %}">{{ user.following.count }}</a></p>
 <a href="{% url 'edit_profile' %}">Edit Profile</a>
 {% endblock %}

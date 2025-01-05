@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.username }}のフォロワー</h2>
+<ul>
+  {% for follow in followers %}
+  <li>
+    <a href="{% url 'profile' follow.follower.username %}">{{ follow.follower.username }}</a>
+  </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'profile' user.username %}">戻る</a>
+{% endblock %}

@@ -170,3 +170,15 @@ def like_post(request, post_id):
     if not created:
         like.delete()
     return redirect('post_detail', post_id=post.id)
+
+
+def follower_list(request, username):
+    user = get_object_or_404(User, username=username)
+    followers = Follow.objects.filter(followed=user)
+    return render(request, 'timeline/follower_list.html', {'user': user, 'followers': followers})
+
+
+def following_list(request, username):
+    user = get_object_or_404(User, username=username)
+    following = Follow.objects.filter(follower=user)
+    return render(request, 'timeline/following_list.html', {'user': user, 'following': following})
